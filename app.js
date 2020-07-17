@@ -4,8 +4,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/userRoute');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/userRoute');
+const familyRouter = require('./routes/familyRoute');
+const categoryRouter = require('./routes/categoryRoute');
+const expenseRouter = require('./routes/expenseRoute');
+const incomeRouter = require('./routes/incomeRoute');
 const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config({ path: ".env" });
@@ -25,6 +29,10 @@ app.use(cors());
 
 app.use('/', indexRouter);
 app.use(usersRouter);
+app.use(familyRouter);
+app.use(categoryRouter);
+app.use(expenseRouter);
+app.use(incomeRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

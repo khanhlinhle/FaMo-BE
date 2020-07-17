@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, "Password is required"]
+        // required: [true, "Password is required"]
     },
     tokens: {
         type: [],
@@ -28,5 +28,6 @@ const userSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
+
 const User = mongoose.model("User", userSchema);
 module.exports = User;

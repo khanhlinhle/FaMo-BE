@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const familyWalletSchema = new mongoose.Schema({
+const familySchema = new mongoose.Schema({
     users: [{
         type: mongoose.Schema.ObjectId,
         ref: "User"
@@ -13,5 +13,5 @@ const familyWalletSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const FamilyWallet = mongoose.model("FamilyWallet", familyWalletSchema);
-module.exports = FamilyWallet;
+const Family = mongoose.model("Family", familySchema);
+module.exports = Family;

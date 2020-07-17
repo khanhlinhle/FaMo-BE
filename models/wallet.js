@@ -10,14 +10,17 @@ const walletSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ["Bank", "Cash", "Visa", "Deposit"],
+        enum: ["Bank", "Cash", "Credit"],
         required: [true, "Type is required"],
         trim: true
     },
-    familyWallet: {
+    family: {
         type: mongoose.Schema.ObjectId,
-        ref: "FamilyWallet",
-        required: [true, "At least add 1 wallet"]
+        ref: "Family",
+    },
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: "User"
     }
 }, {
     timestamps: true

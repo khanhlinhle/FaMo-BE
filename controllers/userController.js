@@ -2,6 +2,7 @@ const User = require("../models/user");
 const saltRounds = 10;
 const bcrypt = require("bcrypt");
 const { generateToken, loginWithEmail } = require("../services/authenticationService");
+const axios = require("axios");
 
 exports.getUsersList = async (request, response) => {
     const usersList = await User.find({});
@@ -45,7 +46,7 @@ exports.getMyProfile = async (request, response) => {
 
 exports.updateMyProfile = async (request, response) => {
     try {
-        const { firstName, lastName, password } = request.body;
+        const { firstName, lastName, password, email } = request.body;
         const user = request.user;
         if (firstName) {
             user.firstName = firstName;
@@ -55,6 +56,9 @@ exports.updateMyProfile = async (request, response) => {
         };
         if (password) {
             user.password = password;
+        };
+        if (email) {
+            user.email = email;
         };
         await user.save();
         response.status(200).json({
@@ -90,4 +94,54 @@ exports.logOut = async (request, response) => {
         status: "Success",
         data: user
     });
+};
+
+exports.logInWithFacebook = async (request, response) => {
+    try {
+        const { fbToken } = request.body;
+        if (!fbToken) throw new Error("Token is missing")
+        const data = await axios.get(
+            `https://graph.facebook.com/v7.0/me?fields=id%2Cname%2Cemail&access_token=${fbToken}`
+        );
+        const info = data.data;
+        const words = info.name.split(" ");
+        let user = await User.findOne({ email: info.email });
+        if (!user) user = await User.create({
+            email: info.email,
+            firstName: words.pop(),
+            lastName: words.join(" ")
+        });
+        const token = await generateToken(user);
+        response.status(200).json({
+            status: "Success",
+            data: { user, token }
+        });
+    } catch (error) {
+        console.log(error);
+    };
+};
+
+exports.logInWithGoogle = async (request, response) => {
+    try {
+        const { googleToken } = request.body;
+        if (!googleToken) throw new Error("Token is missing")
+        const data = await axios.get(
+            `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${googleToken}`
+        );
+        const info = data.data;
+        console.log(info);
+        let user = await User.findOne({ email: info.email });
+        if (!user) user = await User.create({
+            email: info.email,
+            firstName: info.given_name,
+            lastName: info.family_name
+        });
+        const token = await generateToken(user);
+        response.status(200).json({
+            status: "Success",
+            data: { user, token }
+        });
+    } catch (error) {
+        console.log(error);
+    };
 };
