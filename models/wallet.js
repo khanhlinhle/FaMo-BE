@@ -6,7 +6,6 @@ const walletSchema = new mongoose.Schema({
     },
     balance: {
         type: Number,
-        required: [true, "Current amount is required"]
     },
     type: {
         type: String,

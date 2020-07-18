@@ -8,7 +8,12 @@ const familySchema = new mongoose.Schema({
     wallets: [{
         type: mongoose.Schema.ObjectId,
         ref: "Wallet"
-    }]
+    }],
+    name: {
+        type: String,
+        required: [true, "Name is required"],
+        trim: true
+    }
 }, {
     timestamps: true
 });

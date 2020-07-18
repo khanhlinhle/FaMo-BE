@@ -20,10 +20,34 @@ exports.getFamily = async (request, response) => {
 
 exports.createFamily = async (request, response) => {
     try {
+        console.log(request.body)
+
+        const { name } = request.body;
+        console.log(name);
+        if (!name) throw new Error("Name is required");
         const user = request.user;
+        console.log("3");
         const family = await Family.create({
-            users: [user]
+            users: [user],
+            name: name
         });
+        const cashWallet = await Wallet.create({
+            balance: 0,
+            type: "Cash"
+        });
+        family.wallets.push(cashWallet);
+        const bankWallet = await Wallet.create({
+            balance: 0,
+            type: "Bank"
+        });
+        family.wallets.push(bankWallet);
+        const creditWallet = await Wallet.create({
+            balance: 0,
+            type: "Credit"
+        });
+        family.wallets.push(creditWallet);
+        console.log("4");
+        await family.save();
         response.status(200).json({
             status: "Success",
             data: family
@@ -31,6 +55,24 @@ exports.createFamily = async (request, response) => {
     } catch (error) {
         response.status(400).json({
             status: "Success",
+            message: error.message
+        });
+    };
+};
+
+exports.updateFamilyName = async (request, response) => {
+    try {
+        const { name } = request.body;
+        const family = request.family;
+        if (name) family.name = name;
+        await family.save();
+        response.status(200).json({
+            status: "Success",
+            data: family
+        });
+    } catch (error) {
+        response.status(400).json({
+            status: "Fail",
             message: error.message
         });
     };
