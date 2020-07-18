@@ -9,6 +9,11 @@ const categorySchema = new mongoose.Schema({
     parent: {
         type: mongoose.Schema.ObjectId,
         ref: "Category"
+    },
+    type: {
+        type: String,
+        enum: ["Expense", "Income"],
+        required: [true, "Type is required"]
     }
 }, {
     timestamps: true

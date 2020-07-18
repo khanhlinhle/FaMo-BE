@@ -2,11 +2,12 @@ const Category = require("../models/category");
 
 exports.createCategory = async (request, response) => {
     try {
-        const { name, parent } = request.body;
-        if (!name) throw new Error("Name is required");
+        const { name, parent, type } = request.body;
+        if (!name || !type) throw new Error("Name and type are required");
         const category = await Category.create({
             name: name,
-            parent: parent
+            parent: parent,
+            type: type
         });
         response.status(200).json({
             status: "Success",

@@ -17,5 +17,4 @@ router.route("/family/wallets").get(loginRequired, canAccessFamily, getWalletLis
 router.route("/family/wallets/:walletId").get(loginRequired, canAccessFamily, canAccessWallet, getWallet)
     .post(loginRequired, canAccessFamily, canAccessWallet, updateWallet)
     .delete(loginRequired, canAccessFamily, canAccessWallet, deleteWallet);
-
 module.exports = router;

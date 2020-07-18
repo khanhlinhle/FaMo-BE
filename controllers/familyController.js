@@ -39,14 +39,14 @@ exports.createFamily = async (request, response) => {
 exports.addFamilyMember = async (request, response) => {
     try {
         const user = request.user;
-        const { familyId, memberId } = request.body;
-        if (!familyId || !memberId) throw new Error("FamilyID and memberID are required");
+        const { familyId, memberEmail } = request.body;
+        if (!familyId || !memberEmail) throw new Error("FamilyID and memberEmail are required");
         const family = await Family.findById({ _id: familyId });
         if (!family) throw new Error("Undefined family");
         if (!family.users.filter(item => item === user._id)) throw new Error("User is not allowed to update");
-        const member = await User.findById({ _id: memberId });
+        const member = await User.findOne({ email: memberEmail });
         if (!member) throw new Error("Undefined member");
-        if (!family.users.filter(item => item === memberId)) return family.users.push(memberId);
+        if (!family.users.filter(item => item === member._id)) return family.users.push(member._id);
         await family.save();
         response.status(200).json({
             status: "Success",
@@ -87,14 +87,14 @@ exports.addFamilyWallet = async (request, response) => {
 exports.removeFamilyMember = async (request, response) => {
     try {
         const user = request.user;
-        const { familyId, memberId } = request.body;
-        if (!familyId || !memberId) throw new Error("FamilyID and memberID are required");
+        const { familyId, memberEmail } = request.body;
+        if (!familyId || !memberEmail) throw new Error("FamilyID and memberID are required");
         const family = await Family.findById({ _id: familyId });
         if (!family) throw new Error("Undefined family");
-        const member = await User.findById({ _id: memberId });
+        const member = await User.findOne({ email: memberEmail });
         if (!member) throw new Error("Undefined member");
         if (!family.users.filter(item => item === user._id)) throw new Error("User is not allowed to update");
-        family.users = family.users.filter(item => item !== memberId);
+        family.users = family.users.filter(item => item !== member._id);
         await family.save();
         response.status(200).json({
             status: "Success",
