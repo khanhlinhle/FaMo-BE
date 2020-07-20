@@ -5,7 +5,7 @@ const Wallet = require("../models/wallet");
 exports.getFamily = async (request, response) => {
     try {
         const user = request.user;
-        const family = await Family.find({ users: user });
+        const family = await Family.find({ users: user }).populate("wallets", "type");
         response.status(200).json({
             status: "Success",
             data: family
@@ -20,8 +20,7 @@ exports.getFamily = async (request, response) => {
 
 exports.createFamily = async (request, response) => {
     try {
-        console.log(request.body)
-
+        console.log(request.user)
         const { name } = request.body;
         console.log(name);
         if (!name) throw new Error("Name is required");

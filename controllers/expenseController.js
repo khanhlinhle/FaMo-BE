@@ -35,14 +35,18 @@ exports.getExpense = async (request, response) => {
 
 exports.createExpense = async (request, response) => {
     try {
+        console.log("1");
         const user = request.user;
         const wallet = request.wallet;
-        let { amount, description, date, categoryId } = request.body;
-        if (!amount || !description || !date || !categoryId) throw new Error("Amount, description, date and categoryId are required");
-        const category = await Category.findById({ _id: categoryId });
-        if (!category) throw new Error("Undefined category");
+        console.log("2");
+        let { amount, description, date, category } = request.body;
+        if (!amount || !date || !category) throw new Error("Amount, description, date and categoryId are required");
+        console.log(request.body);
+        const existCategory = await Category.findById({ _id: category });
+        console.log("3");
+        if (!existCategory) throw new Error("Undefined category");
         const expense = await Expense.create({
-            category: category,
+            category: existCategory,
             user: user,
             wallet: wallet,
             description: description,
@@ -51,6 +55,7 @@ exports.createExpense = async (request, response) => {
         });
         wallet.balance = wallet.balance - expense.amount;
         await wallet.save();
+        console.log("4");
         response.status(200).json({
             status: "Success",
             data: { expense, wallet }

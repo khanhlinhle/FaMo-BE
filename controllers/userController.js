@@ -74,7 +74,7 @@ exports.updateMyProfile = async (request, response) => {
 };
 
 exports.logIn = async (request, response) => {
-    const { email, password } = request.body
+    const { email, password } = request.body.account;
     if (!email || !password) throw new Error("Email and password are required");
     const user = await loginWithEmail(email, password);
     const token = await generateToken(user);
@@ -85,7 +85,7 @@ exports.logIn = async (request, response) => {
 };
 
 exports.logOut = async (request, response) => {
-    const { token } = request.body;
+    const token = request.token;
     if (!token) throw new Error("Token is required");
     const user = request.user;
     user.token = user.tokens.filter(elm => elm !== token);
@@ -97,8 +97,10 @@ exports.logOut = async (request, response) => {
 };
 
 exports.logInWithFacebook = async (request, response) => {
+
     try {
-        const { fbToken } = request.body;
+        const { fbToken } = request.query;
+
         if (!fbToken) throw new Error("Token is missing")
         const data = await axios.get(
             `https://graph.facebook.com/v7.0/me?fields=id%2Cname%2Cemail&access_token=${fbToken}`
@@ -112,6 +114,7 @@ exports.logInWithFacebook = async (request, response) => {
             lastName: words.join(" ")
         });
         const token = await generateToken(user);
+        console.log(user, token)
         response.status(200).json({
             status: "Success",
             data: { user, token }

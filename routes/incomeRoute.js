@@ -4,7 +4,7 @@ const { createIncome, updateIncome, deleteIncome, getIncomeList, getIncome } = r
 
 var router = express.Router();
 
-router.route("/family/wallets/:walletId/incomes")
+router.route("/family/:familyId/wallets/:walletId/incomes")
     .get(loginRequired, canAccessFamily, canAccessWallet, getIncomeList)
     .post(loginRequired, canAccessFamily, canAccessWallet, createIncome);
 

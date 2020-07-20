@@ -25,12 +25,14 @@ exports.loginWithEmail = async (email, password) => {
 };
 
 exports.loginRequired = async (request, response, next) => {
+    console.log(request.headers.authorization);
     if (!request.headers.authorization || !request.headers.authorization.startsWith("Bearer ")) {
         return response.status(401).json({
             status: "Fail",
             error: "Unauthorized"
         });
     };
+
     const token = request.headers.authorization.replace("Bearer ", "");
     try {
         const decode = jwt.verify(token, process.env.SECRET);
@@ -46,6 +48,7 @@ exports.loginRequired = async (request, response, next) => {
         });
     };
 };
+
 
 exports.canAccessFamily = async (request, response, next) => {
     try {

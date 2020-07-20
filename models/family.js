@@ -7,12 +7,13 @@ const familySchema = new mongoose.Schema({
     }],
     wallets: [{
         type: mongoose.Schema.ObjectId,
-        ref: "Wallet"
+        ref: "Walet"
     }],
     name: {
         type: String,
         required: [true, "Name is required"],
-        trim: true
+        trim: true,
+        unique: true
     }
 }, {
     timestamps: true

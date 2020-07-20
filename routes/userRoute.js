@@ -19,7 +19,7 @@ router.route("/me/wallets/:walletId").get(loginRequired, canAccessPersonalWallet
 
 router.route("/auth/login").post(logIn);
 
-router.route("/auth/login/facebook").post(logInWithFacebook);
+router.route("/auth/login/facebook").get(logInWithFacebook);
 
 router.route("/auth/login/google").post(logInWithGoogle);
 

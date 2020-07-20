@@ -37,12 +37,12 @@ exports.createIncome = async (request, response) => {
     try {
         const user = request.user;
         const wallet = request.wallet;
-        let { amount, description, date, categoryId } = request.body;
-        if (!amount || !description || !date || !categoryId) throw new Error("Amount, description, date and categoryId are required");
-        const category = await Category.findById({ _id: categoryId });
-        if (!category) throw new Error("Undefined category");
+        let { amount, description, date, category } = request.body;
+        if (!amount || !date || !category) throw new Error("Amount, description, date and categoryId are required");
+        const existedCategory = await Category.findById({ _id: category });
+        if (!existedCategory) throw new Error("Undefined category");
         const income = await Income.create({
-            category: category,
+            category: existedCategory,
             user: user,
             wallet: wallet,
             description: description,
