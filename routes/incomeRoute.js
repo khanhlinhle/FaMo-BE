@@ -8,7 +8,7 @@ router.route("/family/:familyId/wallets/:walletId/incomes")
     .get(loginRequired, canAccessFamily, canAccessWallet, getIncomeList)
     .post(loginRequired, canAccessFamily, canAccessWallet, createIncome);
 
-router.route("/family/wallets/:walletId/incomes/:incomeId")
+router.route("/family/:familyId/wallets/:walletId/incomes/:incomeId")
     .get(loginRequired, canAccessFamily, canAccessWallet, getIncome)
     .put(loginRequired, canAccessFamily, canAccessWallet, updateIncome)
     .delete(loginRequired, canAccessFamily, canAccessWallet, deleteIncome);
