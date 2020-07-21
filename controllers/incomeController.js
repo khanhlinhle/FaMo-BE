@@ -33,13 +33,38 @@ exports.getIncome = async (request, response) => {
     };
 };
 
+exports.getIncomeReport = async (request, response) => {
+    try {
+        const { wallets } = request.body
+        let incomeList = [];
+
+        for (const wallet of wallets) {
+            let list = await Income.find({ wallet: wallet._id });
+            incomeList = [...incomeList, ...list];
+        }
+
+        console.log('wallets ', wallets);
+        console.log('incomeList ', incomeList);
+
+        response.status(200).json({
+            status: "Success",
+            data: incomeList
+        });
+    } catch (error) {
+        response.status(400).json({
+            status: "Fail",
+            message: error.message
+        });
+    };
+};
+
 exports.createIncome = async (request, response) => {
     try {
         const user = request.user;
         const wallet = request.wallet;
         let { amount, description, date, category } = request.body;
         if (!amount || !date || !category) throw new Error("Amount, description, date and categoryId are required");
-        const existedCategory = await Category.findById({ _id: category });
+        const existedCategory = await (await Category.findById({ _id: category }));
         if (!existedCategory) throw new Error("Undefined category");
         const income = await Income.create({
             category: existedCategory,

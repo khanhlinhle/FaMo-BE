@@ -23,7 +23,7 @@ exports.createCategory = async (request, response) => {
 
 exports.getCategoryList = async (request, response) => {
     try {
-        const categoryList = await Category.find({});
+        const categoryList = await Category.find({}).populate("category", "name");
         response.status(200).json({
             status: "Success",
             data: categoryList

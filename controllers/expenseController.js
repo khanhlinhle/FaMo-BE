@@ -33,6 +33,31 @@ exports.getExpense = async (request, response) => {
     };
 };
 
+exports.getExpenseReport = async (request, response) => {
+    try {
+        const { wallets } = request.body
+        let expenseList = [];
+
+        for (const wallet of wallets) {
+            let list = await Expense.find({ wallet: wallet._id });
+            expenseList = [...expenseList, ...list];
+        }
+
+        console.log('wallets ', wallets);
+        console.log('expenseList ', expenseList);
+
+        response.status(200).json({
+            status: "Success",
+            data: expenseList
+        });
+    } catch (error) {
+        response.status(400).json({
+            status: "Fail",
+            message: error.message
+        });
+    };
+};
+
 exports.createExpense = async (request, response) => {
     try {
         console.log("1");
