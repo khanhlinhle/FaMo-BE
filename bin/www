@@ -6,7 +6,7 @@
 
 var app = require('../app');
 var debug = require('debug')('finalproject-backend:server');
-var https = require('https');
+var http = require('http');
 const fs = require("fs");
 const path = require("path");
 
@@ -21,11 +21,8 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-const server = https.createServer(
-  {
-    key: fs.readFileSync(path.join(__dirname, "server.key")),
-    cert: fs.readFileSync(path.join(__dirname, "server.cert"))
-  },
+const server = http.createServer(
+
   app
 );
 
