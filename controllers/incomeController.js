@@ -90,6 +90,7 @@ exports.createIncome = async (request, response) => {
 
 exports.updateIncome = async (request, response) => {
     try {
+        console.log(request.body)
         const wallet = request.wallet;
         const incomeId = request.params.incomeId;
         const income = await Income.findById({ _id: incomeId });
@@ -125,9 +126,10 @@ exports.deleteIncome = async (request, response) => {
         wallet.balance = wallet.balance - income.amount;
         await wallet.save();
         await income.remove();
+        const incomeList = await Income.find({});
         response.status(200).json({
             status: "Success",
-            data: { wallet }
+            data: { wallet, incomeList }
         });
     } catch (error) {
         response.status(400).json({

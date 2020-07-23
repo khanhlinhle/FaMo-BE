@@ -14,7 +14,9 @@ exports.getUsersList = async (request, response) => {
 
 exports.createUser = async (request, response) => {
     try {
+        console.log("test")
         const { firstName, lastName, email, password } = request.body;
+        console.log(request.body)
         if (!firstName || !lastName || !email || !password) throw new Error("First name, last name, email & password are required");
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         const user = await User.create({

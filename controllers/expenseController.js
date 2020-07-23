@@ -35,7 +35,7 @@ exports.getExpense = async (request, response) => {
 
 exports.getExpenseReport = async (request, response) => {
     try {
-        const { wallets } = request.body
+        const { wallets } = request.body;
         let expenseList = [];
 
         for (const wallet of wallets) {
@@ -60,15 +60,11 @@ exports.getExpenseReport = async (request, response) => {
 
 exports.createExpense = async (request, response) => {
     try {
-        console.log("1");
         const user = request.user;
         const wallet = request.wallet;
-        console.log("2");
         let { amount, description, date, category } = request.body;
         if (!amount || !date || !category) throw new Error("Amount, description, date and categoryId are required");
-        console.log(request.body);
         const existCategory = await Category.findById({ _id: category });
-        console.log("3");
         if (!existCategory) throw new Error("Undefined category");
         const expense = await Expense.create({
             category: existCategory,
@@ -80,7 +76,6 @@ exports.createExpense = async (request, response) => {
         });
         wallet.balance = wallet.balance - expense.amount;
         await wallet.save();
-        console.log("4");
         response.status(200).json({
             status: "Success",
             data: { expense, wallet }
@@ -124,15 +119,17 @@ exports.updateExpense = async (request, response) => {
 
 exports.deleteExpense = async (request, response) => {
     try {
+        console.log(request.body)
         const wallet = request.wallet;
         const expenseId = request.params.expenseId;
         const expense = await Expense.findById({ _id: expenseId });
         wallet.balance = wallet.balance + expense.amount;
         await wallet.save();
         await expense.remove();
+        const expenseList = await Expense.find({});
         response.status(200).json({
             status: "Success",
-            data: { wallet }
+            data: { wallet, expenseList }
         });
     } catch (error) {
         response.status(400).json({
